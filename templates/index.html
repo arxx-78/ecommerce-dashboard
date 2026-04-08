@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EcomInsight — Analytics Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<!-- ── SIDEBAR ─────────────────────────────────────────────────── -->
+<aside class="sidebar">
+  <div class="brand">
+    <span class="brand-icon">⬡</span>
+    <span class="brand-name">EcomInsight</span>
+  </div>
+  <nav class="nav">
+    <a class="nav-link active" data-view="dashboard" href="#">
+      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      Dashboard
+    </a>
+    <a class="nav-link" data-view="products" href="#">
+      <svg viewBox="0 0 24 24"><path d="M20 7H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+      Products
+    </a>
+    <a class="nav-link" data-view="customers" href="#">
+      <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Customers
+    </a>
+    <a class="nav-link" data-view="reports" href="#">
+      <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      Reports
+    </a>
+  </nav>
+  <div class="sidebar-footer">v1.0 &nbsp;•&nbsp; 2024</div>
+</aside>
+
+<!-- ── MAIN ────────────────────────────────────────────────────── -->
+<main class="main">
+
+  <!-- Header -->
+  <header class="topbar">
+    <div class="topbar-title" id="page-title">Overview</div>
+    <div class="topbar-filters">
+      <input type="date" id="start-date" title="Start date" />
+      <span class="date-sep">→</span>
+      <input type="date" id="end-date" title="End date" />
+      <button class="btn-apply" id="btn-apply">Apply</button>
+      <button class="btn-reset" id="btn-reset">Reset</button>
+    </div>
+  </header>
+
+  <!-- ── DASHBOARD VIEW ──────────────────────────────────────── -->
+  <section id="view-dashboard" class="view active">
+
+    <!-- KPI Cards -->
+    <div class="kpi-grid">
+      <div class="kpi-card" id="kpi-revenue">
+        <div class="kpi-label">Total Revenue</div>
+        <div class="kpi-value" id="val-revenue">—</div>
+        <div class="kpi-sub">Gross sales</div>
+      </div>
+      <div class="kpi-card" id="kpi-orders">
+        <div class="kpi-label">Total Orders</div>
+        <div class="kpi-value" id="val-orders">—</div>
+        <div class="kpi-sub">Unique transactions</div>
+      </div>
+      <div class="kpi-card" id="kpi-aov">
+        <div class="kpi-label">Avg Order Value</div>
+        <div class="kpi-value" id="val-aov">—</div>
+        <div class="kpi-sub">Per order</div>
+      </div>
+      <div class="kpi-card" id="kpi-customers">
+        <div class="kpi-label">Unique Customers</div>
+        <div class="kpi-value" id="val-customers">—</div>
+        <div class="kpi-sub">Distinct buyers</div>
+      </div>
+      <div class="kpi-card" id="kpi-units">
+        <div class="kpi-label">Units Sold</div>
+        <div class="kpi-value" id="val-units">—</div>
+        <div class="kpi-sub">Total items</div>
+      </div>
+    </div>
+
+    <!-- Charts Row 1 -->
+    <div class="charts-row">
+      <div class="chart-card wide">
+        <div class="chart-header">
+          <span class="chart-title">Monthly Revenue Trend</span>
+        </div>
+        <canvas id="chart-monthly"></canvas>
+      </div>
+      <div class="chart-card">
+        <div class="chart-header">
+          <span class="chart-title">Revenue by Category</span>
+        </div>
+        <canvas id="chart-category"></canvas>
+      </div>
+    </div>
+
+    <!-- Charts Row 2 -->
+    <div class="charts-row">
+      <div class="chart-card">
+        <div class="chart-header">
+          <span class="chart-title">Quarterly Performance</span>
+        </div>
+        <canvas id="chart-quarterly"></canvas>
+      </div>
+      <div class="chart-card wide">
+        <div class="chart-header">
+          <span class="chart-title">Top 10 Products</span>
+        </div>
+        <canvas id="chart-top-products"></canvas>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ── PRODUCTS VIEW ───────────────────────────────────────── -->
+  <section id="view-products" class="view">
+    <div class="section-header">
+      <h2>Product Performance</h2>
+    </div>
+    <div class="table-card">
+      <table class="data-table" id="products-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Product</th>
+            <th>Category</th>
+            <th>Revenue ($)</th>
+            <th>Orders</th>
+            <th>Avg Revenue</th>
+          </tr>
+        </thead>
+        <tbody id="products-tbody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ── CUSTOMERS VIEW ──────────────────────────────────────── -->
+  <section id="view-customers" class="view">
+    <div class="section-header"><h2>Customer Insights</h2></div>
+    <div class="kpi-grid small">
+      <div class="kpi-card">
+        <div class="kpi-label">Avg Spend / Customer</div>
+        <div class="kpi-value" id="cust-avg-spend">—</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Highest Spend</div>
+        <div class="kpi-value" id="cust-max-spend">—</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Repeat Customers</div>
+        <div class="kpi-value" id="cust-repeat">—</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">One-Time Buyers</div>
+        <div class="kpi-value" id="cust-onetime">—</div>
+      </div>
+    </div>
+    <div class="charts-row" style="margin-top:2rem">
+      <div class="chart-card wide">
+        <div class="chart-header"><span class="chart-title">Revenue by Category (Customer View)</span></div>
+        <canvas id="chart-cust-cat"></canvas>
+      </div>
+      <div class="chart-card">
+        <div class="chart-header"><span class="chart-title">Repeat vs One-Time</span></div>
+        <canvas id="chart-cust-type"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── REPORTS VIEW ────────────────────────────────────────── -->
+  <section id="view-reports" class="view">
+    <div class="section-header"><h2>Generate Report</h2></div>
+    <div class="report-card">
+      <p class="report-desc">Export a full summary report for the selected date range. Choose CSV for spreadsheet use.</p>
+      <div class="report-form">
+        <div class="form-group">
+          <label>Start Date</label>
+          <input type="date" id="rpt-start" />
+        </div>
+        <div class="form-group">
+          <label>End Date</label>
+          <input type="date" id="rpt-end" />
+        </div>
+        <div class="form-group">
+          <label>Format</label>
+          <select id="rpt-format">
+            <option value="csv">CSV Spreadsheet</option>
+            <option value="txt">Text Report</option>
+          </select>
+        </div>
+        <button class="btn-download" id="btn-download">
+          <svg viewBox="0 0 24 24" width="18" height="18"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download Report
+        </button>
+      </div>
+      <div id="rpt-status" class="rpt-status"></div>
+    </div>
+  </section>
+
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="{{ url_for('static', filename='dashboard.js') }}"></script>
+</body>
+</html>
