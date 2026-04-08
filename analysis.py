@@ -5,9 +5,12 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import seaborn as sns
+
+
 import os
 
-DATA_PATH = os.path.join(os.path.dirname(__file__), "../data/ecommerce_data.csv")
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DATA_PATH = os.path.join(BASE_DIR, "data.csv")
 CHARTS_DIR = os.path.join(os.path.dirname(__file__), "../frontend/static/charts")
 os.makedirs(CHARTS_DIR, exist_ok=True)
 
