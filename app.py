@@ -9,8 +9,10 @@ from datetime import datetime
 from flask import Flask, jsonify, request, send_file, render_template
 
 # ── path setup ────────────────────────────────────────────────────
+
+
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-ROOT_DIR = os.path.dirname(BASE_DIR)
+DATA_PATH = os.path.join(BASE_DIR, "data.csv")
 
 import sys
 sys.path.insert(0, BASE_DIR)
@@ -28,11 +30,19 @@ app = Flask(
 
 # ── Load & cache data once on startup ─────────────────────────────
 print("Loading dataset...")
-_df_full = load_and_clean()
+try:
+    _df_full = load_and_clean()
+    generate_charts(_df_full)
+    print("Dataset loaded successfully")
+except Exception as e:
+    print("ERROR LOADING DATASET:", e)
+    _df_full = None
 generate_charts(_df_full)
 print("Ready.")
 
-
+def _filtered_df(start_date=None, end_date=None):
+    if _df_full is None:
+        return pd.DataFrame()
 def _filtered_df(start_date=None, end_date=None):
     df = _df_full.copy()
     if start_date:
